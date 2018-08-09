@@ -26,8 +26,8 @@
                 E-mail:
                 <p:inputText value='#{controler.user.email}' required="true"/>
                 
-                Captcha would go here but it's broken
-                <p:commandButton value='Submit' action='#{controler.checkAndRegister()}'/>
+                <p:captcha/>
+                <p:commandButton value='Submit' ajax='false' action='#{controler.checkAndRegister()}'/>
             </p:panelGrid>
         </h:form>
     </h:body>
