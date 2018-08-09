@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:panelGrid columns='2'>
+                First name:
+                <p:inputText value='#{controler.user.firstname}' required="true" />
+                Last Name:
+                <p:inputText value='#{controler.user.lastname}' required="true"/>
+                Username:
+                <p:inputText value='#{controler.user.username}' required="true"/>
+                Password:
+                <p:password value="#{controler.user.password}" required="true" />
+                Address:
+                <p:inputText value='#{controler.user.address}' required="true" />
+                Date of birth:
+                <p:calendar value ='#{controller.user.dob}'  showOn='button' required="true"/>
+                Phone:
+                <p:inputText value='#{controler.user.phone}' required="true"/>
+                E-mail:
+                <p:inputText value='#{controler.user.email}' required="true"/>
+                
+                Captcha would go here but it's broken
+                <p:commandButton value='Submit' action='#{controler.checkAndRegister()}'/>
+            </p:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+

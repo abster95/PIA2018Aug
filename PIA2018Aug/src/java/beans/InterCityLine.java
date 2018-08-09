@@ -5,15 +5,10 @@
  */
 package beans;
 
-import javax.inject.Named;
-import javax.enterprise.context.Dependent;
-
 /**
  *
  * @author Abi
  */
-@Named(value = "interCityLine")
-@Dependent
 public class InterCityLine {
 
     /**
@@ -21,5 +16,5 @@ public class InterCityLine {
      */
     public InterCityLine() {
     }
-    
+
 }

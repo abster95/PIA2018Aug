@@ -6,21 +6,17 @@
 package beans;
 
 import java.io.Serializable;
-import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 
 /**
  *
  * @author Abi
  */
-@Named(value = "reservation")
-@SessionScoped
-public class Reservation implements Serializable{
+public class Reservation implements Serializable {
 
     /**
      * Creates a new instance of Reservation
      */
     public Reservation() {
     }
-    
+
 }

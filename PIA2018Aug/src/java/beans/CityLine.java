@@ -5,16 +5,12 @@
  */
 package beans;
 
-import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 
 /**
  *
  * @author Abi
  */
-@Named(value = "cityLine")
-@SessionScoped
 public class CityLine implements Serializable {
 
     /**
@@ -22,5 +18,5 @@ public class CityLine implements Serializable {
      */
     public CityLine() {
     }
-    
+
 }

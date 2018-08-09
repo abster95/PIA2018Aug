@@ -5,16 +5,12 @@
  */
 package beans;
 
-import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 
 /**
  *
  * @author Abi
  */
-@Named(value = "bus")
-@SessionScoped
 public class Bus implements Serializable {
 
     /**
@@ -22,5 +18,5 @@ public class Bus implements Serializable {
      */
     public Bus() {
     }
-    
+
 }
