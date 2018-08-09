@@ -1,0 +1,84 @@
+user (
+id primary int
+firstname char
+lastname char
+username char uniqe
+pass char
+adress char
+dob date
+phone char
+employment_cat int foreign key
+email char
+)
+
+employment(
+id primary
+name char
+discount int
+)
+
+inter_city_line (
+id primary
+bus_company_id foreign
+bus_id foreign
+driver_id foreign
+departure datetime
+first_station char
+arrival datetime
+last_station char
+other_stations [arraylist] char
+is_active bool
+)
+
+city_line (
+id primary
+bus_id foreign
+parent_station_id foreign
+first_station char
+other_stations [arraylist] char
+last_station char
+departure_times char
+)
+
+driver (
+id primary
+firstname char
+lastname char
+dob date
+started_driving date
+)
+
+bus (
+id primary
+model char
+creator char
+capacity int
+)
+
+bus_pictures (
+id primary
+bus_id foreign
+name char
+)
+
+bus_companys (
+id primary
+name char
+number char
+adrerss char
+logo char
+)
+
+reservations (
+id primary
+user_id foreign
+number_of_cards int
+line_id int foreign
+)
+
+monthly_cards (
+id primary
+user_id foreign
+line_id foreign
+)
+
