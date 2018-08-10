@@ -33,7 +33,6 @@ is_active bool
 city_line (
 id primary
 bus_id foreign
-parent_station_id foreign
 first_station char
 other_stations [arraylist] char
 last_station char
