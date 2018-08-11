@@ -20,13 +20,13 @@
                 Address:
                 <p:inputText value='#{controler.user.address}' required="true" />
                 Date of birth:
-                <p:calendar value ='#{controller.user.dob}'  showOn='button' required="true"/>
+                <p:calendar value ='#{controler.user.dob}'  showOn='button' required="true"/>
                 Phone:
                 <p:inputText value='#{controler.user.phone}' required="true"/>
                 E-mail:
                 <p:inputText value='#{controler.user.email}' required="true"/>
                 
-                <p:captcha/>
+                <p:captcha required="true"/>
                 <p:commandButton value='Submit' ajax='false' action='#{controler.checkAndRegister()}'/>
             </p:panelGrid>
         </h:form>
