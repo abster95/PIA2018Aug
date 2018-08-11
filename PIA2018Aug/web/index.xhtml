@@ -36,8 +36,9 @@
         </h:form>
 
         <h:form id = 'register'>
-            <p:panelGrid styleClass="centred-form">
+            <p:panelGrid columns='2' styleClass="centred-form">
                 <p:commandButton value="Register" action="#{controler.register()}"/>
+                <p:commandButton value="Skip" action="#{controler.showDefaultPage()}"/>
             </p:panelGrid>
 
         </h:form>
