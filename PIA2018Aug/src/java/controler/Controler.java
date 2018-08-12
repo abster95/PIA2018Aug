@@ -3,27 +3,39 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package beans;
+package controler;
 
+import beans.InterCityLine;
+import beans.User;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import net.sf.ehcache.hibernate.HibernateUtil;
+import org.hibernate.Session;
+import util.NewHibernateUtil;
 
 /**
  *
  * @author Abi
  */
-@ManagedBean
+@ManagedBean(name = "controler")
 @SessionScoped
 public class Controler implements Serializable {
 
     private User user;
+    private String username;
+    private String password;
+    private String newPassword = null;
+    private String confirmPassword;
     private List<InterCityLine> interCityLines;
     private List<InterCityLine> filteredInterCityLines;
+    public static Session session = null;
+
 
     public String logIn() {
         return null;
@@ -40,16 +52,18 @@ public class Controler implements Serializable {
     public String showDefaultPage() {
         return "default";
     }
+    
+    @PostConstruct
+    public void init() {
+        session =NewHibernateUtil.getSessionFactory().openSession();
+        user = new User();
+    }
 
     /**
      * Creates a new instance of Controler
      */
     public Controler() {
         user = new User();
-        interCityLines = new ArrayList<>();
-        //FIXME: query the db for the interCityLines
-        interCityLines.add(new InterCityLine("Busko", "00:00", "01:00", "Beograd", "Novi Pazar", "Beograd#Kragujevac#Kraljevo#Novi Pazar"));
-        interCityLines.add(new InterCityLine("AutoBUS", "00:30", "15:00", "Beograd", "Subotica", "Beograd#Novi Sad#Backa Topola#Subotica"));
     }
 
     public User getUser() {
