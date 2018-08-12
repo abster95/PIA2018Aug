@@ -22,7 +22,8 @@ create table bus_companys
 
 create table bus_pictures
 (
-	id int not null,
+	id int auto_increment
+		primary key,
 	bus_id int not null,
 	name varchar(255) not null,
 	constraint bus_pictures_bus_id_fk
@@ -105,7 +106,7 @@ create table user
 	dob date null comment 'Date of birth',
 	phone varchar(50) not null,
 	emplotment_cat_id int not null comment 'Id which points to category employment category.',
-	email int null,
+	email varchar(50) null,
 	constraint user_username_uindex
 		unique (username),
 	constraint user_employment_id_fk
