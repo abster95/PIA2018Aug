@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 12, 2018 9:48:06 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="beans.MonthlyCards" table="monthly_cards" catalog="piabus" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="cityLine" class="beans.CityLine" fetch="select">
+            <column name="line_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="user" class="beans.User" fetch="select">
+            <column name="user_id" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 12, 2018 9:48:06 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="beans.CityLine" table="city_line" catalog="piabus" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="bus" class="beans.Bus" fetch="select">
+            <column name="bus_id" not-null="true" />
+        </many-to-one>
+        <property name="firstStation" type="string">
+            <column name="first_station" length="50" not-null="true" />
+        </property>
+        <property name="otherStations" type="string">
+            <column name="other_stations" length="65535" not-null="true">
+                <comment>Same as for inter city lines, One Query to display them all, One Query to search them all, One Query to fetch them all and to variable bind them. In the
+                land of ETF where teaching assistants lie.</comment>
+            </column>
+        </property>
+        <property name="lastStation" type="int">
+            <column name="last_station" not-null="true" />
+        </property>
+        <property name="departureTimes" type="string">
+            <column name="departure_times" length="65535" not-null="true">
+                <comment>Contains departure times, in format hh:mm, hh:mm, hh:mm.</comment>
+            </column>
+        </property>
+        <set name="monthlyCardses" table="monthly_cards" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="line_id" not-null="true" />
+            </key>
+            <one-to-many class="beans.MonthlyCards" />
+        </set>
+    </class>
+</hibernate-mapping>
