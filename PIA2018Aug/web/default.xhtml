@@ -20,10 +20,10 @@
                 <p:column filterBy='#{line.busCompany}' headerText="Company" footerText="contains" filterMatchMode="contains">
                     #{line.busCompany}
                 </p:column>
-                <p:column filterBy='#{line.startTime}' headerText="Start time" footerText="gte" filterMatchMode="gte">
+                <p:column filterBy='#{line.startTime}' headerText="Start time" footerText="Exact or later" filterMatchMode="gte">
                     #{line.startTime}
                 </p:column>
-                <p:column filterBy="#{line.endTime}" headerText="End time" footerText="gte" filterMatchMode="gte">
+                <p:column filterBy="#{line.endTime}" headerText="End time" footerText="Exact or later" filterMatchMode="gte">
                     #{line.endTime}
                 </p:column>
                 <p:column filterBy='#{line.otherStations}' headerText="Stations" footerText="contains" filterMatchMode="contains">
