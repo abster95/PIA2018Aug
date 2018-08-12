@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 12, 2018 9:48:06 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated Aug 12, 2018 10:50:50 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="beans.User" table="user" catalog="piabus" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
@@ -40,6 +40,9 @@
         </property>
         <property name="email" type="string">
             <column name="email" />
+        </property>
+        <property name="userType" type="java.lang.Integer">
+            <column name="user_type" />
         </property>
         <set name="reservationses" table="reservations" inverse="true" lazy="true" fetch="select">
             <key>

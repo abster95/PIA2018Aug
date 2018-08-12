@@ -48,15 +48,17 @@ Contributor(s):
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
+    <property name="hibernate.hbm2ddl.auto">update</property>
     <mapping resource="beans/Driver.hbm.xml"/>
+    <mapping resource="beans/Reservations.hbm.xml"/>
+    <mapping resource="beans/MonthlyCards.hbm.xml"/>
+    <mapping resource="beans/User.hbm.xml"/>
     <mapping resource="beans/Bus.hbm.xml"/>
+    <mapping resource="beans/CityLine.hbm.xml"/>
+    <mapping resource="beans/InterCityLine.hbm.xml"/>
+    <mapping resource="beans/Employment.hbm.xml"/>
     <mapping resource="beans/BusCompanys.hbm.xml"/>
     <mapping resource="beans/BusPictures.hbm.xml"/>
-    <mapping resource="beans/InterCityLine.hbm.xml"/>
-    <mapping resource="beans/Reservations.hbm.xml"/>
-    <mapping resource="beans/User.hbm.xml"/>
-    <mapping resource="beans/MonthlyCards.hbm.xml"/>
-    <mapping resource="beans/CityLine.hbm.xml"/>
-    <mapping resource="beans/Employment.hbm.xml"/>
   </session-factory>
+  <property name="hibernate.hbm2ddl.auto">update</property>
 </hibernate-configuration>
