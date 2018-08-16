@@ -22,14 +22,17 @@
 
 
         <h:form id='login'>
+            <p:messages id="messages" showDetail="true" closable="true">
+                <p:autoUpdate />
+            </p:messages>
             <p:panelGrid columns="2" styleClass="centred-form">
                 <f:facet name="header">
                     Login
                 </f:facet>
                 Username: 
-                <p:inputText value="#{controler.user.username}" required ="true" ></p:inputText>
+                <p:inputText value="#{controler.username}" required ="true" ></p:inputText>
                 Password: 
-                <p:password value="#{controler.user.pass}" required ="true"/>
+                <p:password value="#{controler.password}" required ="true"/>
                 Click here to login:
                 <p:commandButton value="ClickMe" action="#{controler.logIn()}"/>
             </p:panelGrid>

@@ -8,6 +8,8 @@
     </h:head>
     <h:body>
         <h:form>
+            <p:messages id="register_messages" showDetail="true" closable="true">
+            </p:messages>
             <p:panelGrid columns='2'>
                 First name:
                 <p:inputText value='#{controler.user.firstname}' required="true" />

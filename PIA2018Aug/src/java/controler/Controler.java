@@ -7,6 +7,7 @@ package controler;
 
 import beans.Bus;
 import beans.BusCompanys;
+import beans.Employment;
 import beans.InterCityLine;
 import beans.User;
 import javax.faces.bean.SessionScoped;
@@ -43,15 +44,69 @@ public class Controler implements Serializable {
     public static Session session = null;
 
     public String logIn() {
+        try{
+            this.session.beginTransaction();
+            SQLQuery query = session.createSQLQuery("SELECT * FROM User WHERE username ='" + this.username + "'");
+            query.addEntity(User.class);
+            List<User> users = (List<User>)query.list();
+            if(users.isEmpty()){
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null , "Invalid username"));
+                throw new Exception();
+            }
+            this.user = users.get(0);
+            if(!(user.getPass().equals(password))){
+                FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null , "Invalid pass"));
+                throw new Exception();
+            }
+            String ret = "";
+            switch(user.getUserType().intValue()){
+                case 0:
+                    FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "User not approved by admin"));
+                    throw new Exception();
+                case 1:
+                    ret = "user";
+                    break;
+                case 2:
+                    ret = "admin";
+                    break;
+            }
+            this.session.getTransaction().commit();
+            return ret;
+        } catch(Exception e){
+            this.session.getTransaction().rollback();
+        }
         return null;
     }
 
     public String register() {
+        user = new User();
         return "register";
     }
 
     public String checkAndRegister() {
-        return null;
+        this.session.beginTransaction();
+        SQLQuery query = this.session.createSQLQuery("SELECT * FROM User WHERE username='" + user.getUsername() + "'");
+        query.addEntity(User.class);
+        List<User> users = (List<User>)query.list();
+        if(!users.isEmpty()){
+            FacesContext.getCurrentInstance().
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null , "Username taken, choose another one"));
+            return null;
+        }
+        query = this.session.createSQLQuery("SELECT * FROM employment WHERE id = 2");
+        query.addEntity(Employment.class);
+        List<Employment> employments = query.list();
+        Employment employment = employments.get(0);
+        user.setUserType(new Integer(0));
+        user.setMonthlyCardses(null);
+        user.setReservationses(null);
+        user.setEmployment(employment);
+        this.session.save(user);
+        this.session.getTransaction().commit();
+        return "index";
     }
 
     public String showDefaultPage() {
@@ -102,6 +157,38 @@ public class Controler implements Serializable {
 
     public void setFilteredInterCityLines(List<InterCityLine> filteredInterCityLines) {
         this.filteredInterCityLines = filteredInterCityLines;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
 }
