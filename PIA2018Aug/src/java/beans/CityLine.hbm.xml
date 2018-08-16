@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated Aug 12, 2018 10:50:50 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="beans.CityLine" table="city_line" catalog="piabus" optimistic-lock="version">
+    <class lazy="false" name="beans.CityLine" table="city_line" catalog="piabus" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />
@@ -28,7 +28,7 @@
                 <comment>Contains departure times, in format hh:mm, hh:mm, hh:mm.</comment>
             </column>
         </property>
-        <set name="monthlyCardses" table="monthly_cards" inverse="true" lazy="true" fetch="select">
+        <set name="monthlyCardses" table="monthly_cards" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="line_id" not-null="true" />
             </key>

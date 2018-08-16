@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated Aug 12, 2018 10:50:50 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="beans.Employment" table="employment" catalog="piabus" optimistic-lock="version">
+    <class lazy="false" name="beans.Employment" table="employment" catalog="piabus" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />
@@ -14,7 +14,7 @@
         <property name="discount" type="int">
             <column name="discount" not-null="true" />
         </property>
-        <set name="users" table="user" inverse="true" lazy="true" fetch="select">
+        <set name="users" table="user" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="emplotment_cat_id" not-null="true">
                     <comment>Id which points to category employment category.</comment>

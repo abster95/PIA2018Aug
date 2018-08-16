@@ -74,7 +74,7 @@ public class Employment  implements java.io.Serializable {
         this.discount = discount;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="employment")
+@OneToMany(fetch=FetchType.EAGER, mappedBy="employment")
     public Set<User> getUsers() {
         return this.users;
     }

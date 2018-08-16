@@ -100,7 +100,7 @@ public class BusCompanys  implements java.io.Serializable {
         this.logo = logo;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="busCompanys")
+@OneToMany(fetch=FetchType.EAGER, mappedBy="busCompanys")
     public Set<InterCityLine> getInterCityLines() {
         return this.interCityLines;
     }

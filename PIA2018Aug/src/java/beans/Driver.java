@@ -103,7 +103,7 @@ public class Driver  implements java.io.Serializable {
         this.startedDriving = startedDriving;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="driver")
+@OneToMany(fetch=FetchType.EAGER, mappedBy="driver")
     public Set<InterCityLine> getInterCityLines() {
         return this.interCityLines;
     }

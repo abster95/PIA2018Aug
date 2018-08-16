@@ -91,7 +91,7 @@ public class Bus  implements java.io.Serializable {
         this.capacity = capacity;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="bus")
+@OneToMany(fetch=FetchType.EAGER, mappedBy="bus")
     public Set<CityLine> getCityLines() {
         return this.cityLines;
     }
@@ -100,7 +100,7 @@ public class Bus  implements java.io.Serializable {
         this.cityLines = cityLines;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="bus")
+@OneToMany(fetch=FetchType.EAGER, mappedBy="bus")
     public Set<InterCityLine> getInterCityLines() {
         return this.interCityLines;
     }
@@ -109,7 +109,7 @@ public class Bus  implements java.io.Serializable {
         this.interCityLines = interCityLines;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="bus")
+@OneToMany(fetch=FetchType.EAGER, mappedBy="bus")
     public Set<BusPictures> getBusPictureses() {
         return this.busPictureses;
     }

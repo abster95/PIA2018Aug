@@ -48,7 +48,7 @@ public class Reservations  implements java.io.Serializable {
         this.id = id;
     }
 
-@ManyToOne(fetch=FetchType.LAZY)
+@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="line_id", nullable=false)
     public InterCityLine getInterCityLine() {
         return this.interCityLine;
@@ -58,7 +58,7 @@ public class Reservations  implements java.io.Serializable {
         this.interCityLine = interCityLine;
     }
 
-@ManyToOne(fetch=FetchType.LAZY)
+@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id", nullable=false)
     public User getUser() {
         return this.user;

@@ -2,6 +2,7 @@ package beans;
 // Generated Aug 12, 2018 10:50:49 PM by Hibernate Tools 4.3.1
 
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -78,7 +79,7 @@ public class InterCityLine  implements java.io.Serializable {
         this.id = id;
     }
 
-@ManyToOne(fetch=FetchType.LAZY)
+@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="bus_id", nullable=false)
     public Bus getBus() {
         return this.bus;
@@ -88,7 +89,7 @@ public class InterCityLine  implements java.io.Serializable {
         this.bus = bus;
     }
 
-@ManyToOne(fetch=FetchType.LAZY)
+@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="bus_company_id", nullable=false)
     public BusCompanys getBusCompanys() {
         return this.busCompanys;
@@ -98,7 +99,7 @@ public class InterCityLine  implements java.io.Serializable {
         this.busCompanys = busCompanys;
     }
 
-@ManyToOne(fetch=FetchType.LAZY)
+@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="driver_id", nullable=false)
     public Driver getDriver() {
         return this.driver;
@@ -151,7 +152,8 @@ public class InterCityLine  implements java.io.Serializable {
     
     @Column(name="other_stations", length=65535)
     public String getOtherStations() {
-        return this.otherStations;
+        String tmp = this.otherStations.replace('#', ' ');
+        return tmp;
     }
     
     public void setOtherStations(String otherStations) {
@@ -168,7 +170,7 @@ public class InterCityLine  implements java.io.Serializable {
         this.isActive = isActive;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="interCityLine")
+@OneToMany(fetch=FetchType.EAGER, mappedBy="interCityLine")
     public Set<Reservations> getReservationses() {
         return this.reservationses;
     }
@@ -177,7 +179,9 @@ public class InterCityLine  implements java.io.Serializable {
         this.reservationses = reservationses;
     }
 
-
+    public  String getHoursMinutes(Date date){
+        return new SimpleDateFormat("HH:mm").format(date);
+    }
 
 
 }

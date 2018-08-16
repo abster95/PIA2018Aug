@@ -8,8 +8,6 @@
         <title>Default View</title>
     </h:head>
     <h:body>
-        <h1>TODO: ADD LIST OF ALL THE BUSES</h1>
-
         <h:form>
             <p:dataTable var='line' value='#{controler.interCityLines}' widgetVar='linesTable' 
                          emptyMessage="No lines found with given criteria"  
@@ -17,14 +15,14 @@
                 <f:facet name='header'>
                     Search inter city lines
                 </f:facet>
-                <p:column filterBy='#{line.busCompany}' headerText="Company" footerText="contains" filterMatchMode="contains">
-                    #{line.busCompany}
+                <p:column filterBy='#{line.busCompanys.name}' headerText="Company" footerText="contains" filterMatchMode="contains">
+                    #{line.busCompanys.name}
                 </p:column>
-                <p:column filterBy='#{line.startTime}' headerText="Start time" footerText="Exact or later" filterMatchMode="gte">
-                    #{line.startTime}
+                <p:column filterBy='#{line.getHoursMinutes(line.departure)}' headerText="Start time" footerText="Exact or later" filterMatchMode="gte">
+                    #{line.getHoursMinutes(line.departure)}
                 </p:column>
-                <p:column filterBy="#{line.endTime}" headerText="End time" footerText="Exact or later" filterMatchMode="gte">
-                    #{line.endTime}
+                <p:column filterBy="#{line.getHoursMinutes(line.arrival)}" headerText="End time" footerText="Exact or later" filterMatchMode="gte">
+                    #{line.getHoursMinutes(line.arrival)}
                 </p:column>
                 <p:column filterBy='#{line.otherStations}' headerText="Stations" footerText="contains" filterMatchMode="contains">
                     #{line.otherStations}

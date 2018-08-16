@@ -5,18 +5,24 @@
  */
 package controler;
 
+import beans.Bus;
+import beans.BusCompanys;
 import beans.InterCityLine;
 import beans.User;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import net.sf.ehcache.hibernate.HibernateUtil;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import util.NewHibernateUtil;
 
 /**
@@ -36,7 +42,6 @@ public class Controler implements Serializable {
     private List<InterCityLine> filteredInterCityLines;
     public static Session session = null;
 
-
     public String logIn() {
         return null;
     }
@@ -52,10 +57,10 @@ public class Controler implements Serializable {
     public String showDefaultPage() {
         return "default";
     }
-    
+
     @PostConstruct
     public void init() {
-        session =NewHibernateUtil.getSessionFactory().openSession();
+        session = NewHibernateUtil.getSessionFactory().openSession();
         user = new User();
     }
 
@@ -75,6 +80,15 @@ public class Controler implements Serializable {
     }
 
     public List<InterCityLine> getInterCityLines() {
+        if(interCityLines != null)
+            return interCityLines;
+        //interCityLines = new ArrayList<>();
+        Transaction tx = session.beginTransaction();
+        SQLQuery query = session.createSQLQuery("SELECT * FROM inter_city_line AS i, bus_companys AS bc, bus AS b "
+                + "WHERE i.bus_company_id = bc.id AND i.bus_id = b.id");
+        query.addEntity(InterCityLine.class);
+        interCityLines = (List<InterCityLine>)query.list();
+        tx.commit();
         return interCityLines;
     }
 

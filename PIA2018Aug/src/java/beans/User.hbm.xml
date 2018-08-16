@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated Aug 12, 2018 10:50:50 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="beans.User" table="user" catalog="piabus" optimistic-lock="version">
+    <class lazy="false" name="beans.User" table="user" catalog="piabus" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />
@@ -44,13 +44,13 @@
         <property name="userType" type="java.lang.Integer">
             <column name="user_type" />
         </property>
-        <set name="reservationses" table="reservations" inverse="true" lazy="true" fetch="select">
+        <set name="reservationses" table="reservations" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="user_id" not-null="true" />
             </key>
             <one-to-many class="beans.Reservations" />
         </set>
-        <set name="monthlyCardses" table="monthly_cards" inverse="true" lazy="true" fetch="select">
+        <set name="monthlyCardses" table="monthly_cards" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="user_id" not-null="true" />
             </key>

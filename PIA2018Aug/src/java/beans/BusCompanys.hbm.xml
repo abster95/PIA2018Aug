@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated Aug 12, 2018 10:50:50 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="beans.BusCompanys" table="bus_companys" catalog="piabus" optimistic-lock="version">
+    <class lazy="false" name="beans.BusCompanys" table="bus_companys" catalog="piabus" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />
@@ -20,7 +20,7 @@
         <property name="logo" type="string">
             <column name="logo" not-null="true" />
         </property>
-        <set name="interCityLines" table="inter_city_line" inverse="true" lazy="true" fetch="select">
+        <set name="interCityLines" table="inter_city_line" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="bus_company_id" not-null="true" />
             </key>

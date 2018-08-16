@@ -65,7 +65,7 @@ public class CityLine  implements java.io.Serializable {
         this.id = id;
     }
 
-@ManyToOne(fetch=FetchType.LAZY)
+@ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="bus_id", nullable=false)
     public Bus getBus() {
         return this.bus;
@@ -115,7 +115,7 @@ public class CityLine  implements java.io.Serializable {
         this.departureTimes = departureTimes;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="cityLine")
+@OneToMany(fetch=FetchType.EAGER, mappedBy="cityLine")
     public Set<MonthlyCards> getMonthlyCardses() {
         return this.monthlyCardses;
     }
