@@ -1,12 +1,35 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>manageInterCity</title>
+        <title>Manage Inter City Line</title>
     </h:head>
     <h:body>
-        manageInterCity
+        <h:form>
+            <p:messages id="register_messages" showDetail="true" closable="true">
+            </p:messages>
+            <p:panelGrid columns='2'>
+                Bus:
+                <p:inputText value='#{controler.interCityLine.bus}' required="true" />
+                Company:
+                <p:inputText value='#{controler.interCityLine.busCompanys}' required="true"/>
+                Driver:
+                <p:inputText value='#{controler.interCityLine.driver}' required="true"/>
+                First station:
+                <p:password value="#{controler.interCityLine.firstStation}" required="true" />
+                Departure:
+                <p:inputText value='#{controler.interCityLine.departure}' required="true" />
+                Other stations:
+                <p:calendar value ='#{controler.interCityLine.otherStations}' required="true"/>
+                Last station:
+                <p:inputText value='#{controler.interCityLine.lastStation}' required="true"/>
+                Arrival:
+                <p:inputText value='#{controler.interCityLine.arrival}' required="true"/>
+                <p:commandButton value='Submit' ajax='false' action='#{controler.addInterCityLine()}'/>
+            </p:panelGrid>
+        </h:form>
     </h:body>
 </html>
 

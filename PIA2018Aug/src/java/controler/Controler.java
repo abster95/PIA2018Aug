@@ -35,6 +35,7 @@ import util.NewHibernateUtil;
 public class Controler implements Serializable {
 
     private User user;
+    private InterCityLine interCityLine;
     private String username;
     private String password;
     private String newPassword = null;
@@ -86,6 +87,14 @@ public class Controler implements Serializable {
         return "register";
     }
 
+        public String addInterCityLine(){
+            this.session.beginTransaction();          
+            this.session.save(interCityLine);
+            this.session.getTransaction().commit();
+            return "manageInterCity";
+    }
+
+    
     public String checkAndRegister() {
         this.session.beginTransaction();
         SQLQuery query = this.session.createSQLQuery("SELECT * FROM User WHERE username='" + user.getUsername() + "'");
@@ -125,7 +134,7 @@ public class Controler implements Serializable {
     public Controler() {
         user = new User();
     }
-
+    
     public User getUser() {
         return user;
     }
@@ -189,6 +198,14 @@ public class Controler implements Serializable {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+    
+    public InterCityLine getInterCityLine() {
+        return interCityLine;
+    }
+
+    public void setInterCityLine(InterCityLine interCityLine) {
+        this.interCityLine = interCityLine;
     }
 
 }
