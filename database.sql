@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.1
+-- version 4.6.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 12, 2018 at 10:40 PM
--- Server version: 10.1.33-MariaDB
--- PHP Version: 7.2.6
+-- Generation Time: Aug 18, 2018 at 12:35 PM
+-- Server version: 5.7.14
+-- PHP Version: 5.6.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -35,6 +33,16 @@ CREATE TABLE `bus` (
   `capacity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `bus`
+--
+
+INSERT INTO `bus` (`id`, `model`, `creator`, `capacity`) VALUES
+(1, '2018S', 'Mercedes', 50),
+(2, '2010Gradski', 'Ikarbus', 120),
+(3, '2014GradskiDugi', 'Solaris', 130),
+(4, '2005Medjugradski', 'Altina', 50);
+
 -- --------------------------------------------------------
 
 --
@@ -48,6 +56,16 @@ CREATE TABLE `bus_companys` (
   `adrerss` varchar(50) NOT NULL,
   `logo` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bus_companys`
+--
+
+INSERT INTO `bus_companys` (`id`, `name`, `number`, `adrerss`, `logo`) VALUES
+(1, 'Busko', '+38162123456', 'Autobuska bb', 'BuSkO'),
+(2, 'Bule bus', '+38160111222', 'Levo desno desno levo', '________\r\n| |  | |\r\n-_----_-'),
+(3, 'U Gasu Sam', '+38169696969', 'Fox 69', '-_(o.o)_-'),
+(4, 'Majstore Zadnja', '+38165333222', 'Zadnja Vrata 77', '[]<---[]-----[]-()');
 
 -- --------------------------------------------------------
 
@@ -76,6 +94,14 @@ CREATE TABLE `city_line` (
   `departure_times` text NOT NULL COMMENT 'Contains departure times, in format hh:mm, hh:mm, hh:mm.'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `city_line`
+--
+
+INSERT INTO `city_line` (`id`, `bus_id`, `first_station`, `other_stations`, `last_station`, `departure_times`) VALUES
+(3, 2, 'Pohorska', 'Pohorska#GO Novi Beograd#Blok 30#Brankov#Zelenjak#Vasingtona#Karaburma 2', 16, '08:00#08:30#09:00#09:30#10:00#10:30#11:00#11:30#12:00#12:30'),
+(4, 3, 'Zvezdara 2', 'Zvezdara 2#Dalmatinska#Masinski#Palilulska#Zelenjak#Branko#Usce', 65, '13:00#13:30#14:00#14:30#15:00#15:30#16:00');
+
 -- --------------------------------------------------------
 
 --
@@ -89,6 +115,16 @@ CREATE TABLE `driver` (
   `dob` date NOT NULL COMMENT 'Date of birth.',
   `started_driving` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `driver`
+--
+
+INSERT INTO `driver` (`id`, `firstname`, `lastname`, `dob`, `started_driving`) VALUES
+(1, 'Misko', 'Miskovic', '1990-01-15', '2018-04-15'),
+(2, 'Majstor', 'Miki', '1980-08-01', '1996-08-08'),
+(3, 'Bucko', 'Buckovic', '1985-07-03', '2017-12-19'),
+(4, 'Saban', 'Sapke', '1970-09-02', '2013-04-05');
 
 -- --------------------------------------------------------
 
@@ -107,7 +143,8 @@ CREATE TABLE `employment` (
 --
 
 INSERT INTO `employment` (`id`, `name`, `discount`) VALUES
-(1, 'Penzos', 10);
+(1, 'Penzos', 10),
+(2, 'Nema', 0);
 
 -- --------------------------------------------------------
 
@@ -127,6 +164,14 @@ CREATE TABLE `inter_city_line` (
   `other_stations` text COMMENT 'Text which contains all stations, so we can search it with one query. Since we won''t be doing advance features don''t need it to be too good.\r\nIt shold store something like station1,station2,station3 and we query it.',
   `is_active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `inter_city_line`
+--
+
+INSERT INTO `inter_city_line` (`id`, `bus_company_id`, `bus_id`, `driver_id`, `departure`, `first_station`, `arrival`, `last_station`, `other_stations`, `is_active`) VALUES
+(1, 1, 1, 3, '2018-08-15 08:30:00', 'Beograd', '2018-08-15 15:00:00', 'Novi Pazar', 'Beograd Kragujevac Kraljevo Novi Pazar', 1),
+(3, 2, 4, 2, '2018-08-15 12:00:00', 'Nis', '2018-08-15 17:00:00', 'Subotica', 'Nis Beograd Novi Sad Subotica', 1);
 
 -- --------------------------------------------------------
 
@@ -172,6 +217,18 @@ CREATE TABLE `user` (
   `email` varchar(255) DEFAULT NULL,
   `user_type` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `username`, `pass`, `adress`, `dob`, `phone`, `emplotment_cat_id`, `email`, `user_type`) VALUES
+(1, 'Ado', 'Adminson', 'admin', 'admin', 'Zasto je ovo obavezno 32', '1990-08-08', '+3816543210', 1, 'admin@administrator.com', 2),
+(2, 'Obican', 'User', 'obican', 'obican', 'Adresica 123', '1992-08-14', '+38164656768', 1, 'obican@lik.com', 1),
+(3, 'Not', 'Authorized', 'neodobren', 'neodobren', 'Zasto brt', '2018-08-06', '+38165233223', 1, 'neodobren@korisnik.com', 0),
+(4, 'Abi', 'Babi', 'abibabi', 'abibabi', 'Ne dam', '2018-08-13', '+3816523432', 2, 'abi@babi.com', 0),
+(5, 'Ajmo', 'Opet', 'ajmo', 'ajmo', 'Neka', '2018-06-11', '+3816523432', 2, 'ajmo@opet.com', 0),
+(6, 'Succ', 'Essful', 'succ', 'succ', 'Success', '2018-08-14', '+3816523734', 2, 'succ@ess.com', 0);
 
 --
 -- Indexes for dumped tables
@@ -256,56 +313,47 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `bus`
 --
 ALTER TABLE `bus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `bus_companys`
 --
 ALTER TABLE `bus_companys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `city_line`
 --
 ALTER TABLE `city_line`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `driver`
 --
 ALTER TABLE `driver`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `employment`
 --
 ALTER TABLE `employment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `inter_city_line`
 --
 ALTER TABLE `inter_city_line`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `monthly_cards`
 --
 ALTER TABLE `monthly_cards`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- Constraints for dumped tables
 --
@@ -349,7 +397,6 @@ ALTER TABLE `reservations`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `user_employment_id_fk` FOREIGN KEY (`emplotment_cat_id`) REFERENCES `employment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
