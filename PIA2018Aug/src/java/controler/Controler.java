@@ -153,8 +153,9 @@ public class Controler implements Serializable {
             SQLQuery query = session.createSQLQuery("SELECT * FROM monthly_cards WHERE id = " + id.toString());
             query.addEntity(User.class);
             List<MonthlyCards> monthlyCardses = (List<MonthlyCards>) query.list();
-            MonthlyCards card = MonthlyCards.get(0);
-            card.setApproved(new Integer(1));
+            MonthlyCards card = monthlyCardses.get(0);
+            //@TODO: re-generate the class with the corresponding field
+            //card.setApproved(new Integer(1));
             this.session.save(card);
             this.session.getTransaction().commit();
         } catch(Exception e){
