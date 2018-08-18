@@ -6,6 +6,7 @@
 package controler;
 
 import beans.Bus;
+import beans.MonthlyCards;
 import beans.BusCompanys;
 import beans.CityLine;
 import beans.Driver;
@@ -37,6 +38,7 @@ import util.NewHibernateUtil;
 public class Controler implements Serializable {
 
     private User user;
+    private InterCityLine interCityLine;
     private String username;
     private String password;
     private String newPassword = null;
@@ -91,6 +93,14 @@ public class Controler implements Serializable {
         return "register";
     }
 
+    public String addInterCityLine(){
+        this.session.beginTransaction();          
+        this.session.save(interCityLine);
+        this.session.getTransaction().commit();
+        return "manageInterCity";
+    }
+
+    
     public String checkAndRegister() {
         this.session.beginTransaction();
         SQLQuery query = this.session.createSQLQuery("SELECT * FROM User WHERE username='" + user.getUsername() + "'");
@@ -122,11 +132,37 @@ public class Controler implements Serializable {
         this.session.getTransaction().commit();
         return users;
     }
-
-    public String showDefaultPage() {
-        return "default";
+    
+    public List<MonthlyCards> getMonthlyCards() {
+        this.session.beginTransaction();
+        SQLQuery query = session.createSQLQuery("SELECT * FROM monthly_cards");
+        query.addEntity(MonthlyCards.class);
+        List<MonthlyCards> monthly_cards = (List<MonthlyCards>) query.list();
+        this.session.getTransaction().commit();
+        return monthly_cards;
     }
+    
 
+//Add aproved column to database and it will work like approve user    
+    public String aprroveMonthlyCardWithId(Integer id) {
+        if (id == null) {
+            return null;
+        }
+        this.session.beginTransaction();
+        try {
+            SQLQuery query = session.createSQLQuery("SELECT * FROM monthly_cards WHERE id = " + id.toString());
+            query.addEntity(User.class);
+            List<MonthlyCards> monthlyCardses = (List<MonthlyCards>) query.list();
+            MonthlyCards card = MonthlyCards.get(0);
+            card.setApproved(new Integer(1));
+            this.session.save(card);
+            this.session.getTransaction().commit();
+        } catch(Exception e){
+            this.session.getTransaction().rollback();
+        }
+        return null;
+    }
+        
     public String aprroveUserWithId(Integer id) {
         if (id == null) {
             return null;
@@ -176,7 +212,7 @@ public class Controler implements Serializable {
     public Controler() {
         user = new User();
     }
-
+    
     public User getUser() {
         return user;
     }
@@ -241,6 +277,14 @@ public class Controler implements Serializable {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+    
+    public InterCityLine getInterCityLine() {
+        return interCityLine;
+    }
+
+    public void setInterCityLine(InterCityLine interCityLine) {
+        this.interCityLine = interCityLine;
     }
 
     public Driver getDriver() {
