@@ -6,8 +6,13 @@
         <title>Adminland</title>
     </h:head>
     <h:body>
-        <h1>SUCCESSFUL LOGIN!</h1>
-        <h2>TODO: Add admin functionality</h2>
+        <h:form>
+            <h:commandLink value="Manage City Lines" action="manageCity"/>
+            <h:commandLink value="Manage Inter City Lines" action="manageInterCity"/>
+            <h:commandLink value="Manage New Users" action="manageNewUsers"/>
+            <h:commandLink value="Manage Ticket Reservations" action="manageReservations"/>
+            <h:commandLink value="Manage Monthly" action="manageMonthly"/>
+        </h:form>
     </h:body>
 </html>
 
