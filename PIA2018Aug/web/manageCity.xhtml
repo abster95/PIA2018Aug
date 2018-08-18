@@ -1,12 +1,33 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>manageCity</title>
+        <title>Manage City Lines</title>
     </h:head>
     <h:body>
-        manageCity
+        <p:messages>
+            <p:autoUpdate />
+        </p:messages>
+        <h:form id="addDriver">
+            <p:panelGrid columns='2'>
+                Driver First Name:
+                <p:inputText value='#{controler.driver.firstname}' required="true" />
+                Driver Last Name:
+                <p:inputText value='#{controler.driver.lastname}' required="true"/>
+                Date of Birth:
+                <p:calendar value ='#{controler.driver.dob}'  showOn='button' required="true"/>
+                Started Driving:
+                <p:calendar value ='#{controler.driver.startedDriving}'  showOn='button' required="true"/>
+                
+                <p:commandButton value='Submit' action='#{controler.addNewDriver()}' update="addDriver"/>
+            </p:panelGrid>
+        </h:form>
+        
+        <h:form id="addLine">
+                
+        </h:form>
     </h:body>
 </html>
 

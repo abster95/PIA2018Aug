@@ -7,6 +7,8 @@ package controler;
 
 import beans.Bus;
 import beans.BusCompanys;
+import beans.CityLine;
+import beans.Driver;
 import beans.Employment;
 import beans.InterCityLine;
 import beans.User;
@@ -41,6 +43,9 @@ public class Controler implements Serializable {
     private String confirmPassword;
     private List<InterCityLine> interCityLines;
     private List<InterCityLine> filteredInterCityLines;
+    private Driver driver;
+    private CityLine cityLine;
+    private Bus cityLineBus;
     public static Session session = null;
 
     public String logIn() {
@@ -135,10 +140,28 @@ public class Controler implements Serializable {
             usr.setUserType(new Integer(1));
             this.session.save(usr);
             this.session.getTransaction().commit();
-        } catch(Exception e){
+        } catch (Exception e) {
             this.session.getTransaction().rollback();
         }
         return null;
+    }
+
+    public String addNewDriver() {
+        this.session.beginTransaction();
+        try{
+            session.save(driver);
+            this.session.getTransaction().commit();
+        }catch(Exception e){
+            this.session.getTransaction().rollback();
+        }
+        driver = new Driver();
+        return null;
+    }
+
+    public String manageCity() {
+        driver = new Driver();
+        cityLine = new CityLine();
+        return "manageCity";
     }
 
     @PostConstruct
@@ -220,4 +243,21 @@ public class Controler implements Serializable {
         this.confirmPassword = confirmPassword;
     }
 
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+
+    public CityLine getCityLine() {
+        return cityLine;
+    }
+
+    public void setCityLine(CityLine cityLine) {
+        this.cityLine = cityLine;
+    }
+
+    
 }
