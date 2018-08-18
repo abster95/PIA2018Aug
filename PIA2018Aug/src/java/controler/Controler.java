@@ -44,27 +44,27 @@ public class Controler implements Serializable {
     public static Session session = null;
 
     public String logIn() {
-        try{
+        try {
             this.session.beginTransaction();
             SQLQuery query = session.createSQLQuery("SELECT * FROM User WHERE username ='" + this.username + "'");
             query.addEntity(User.class);
-            List<User> users = (List<User>)query.list();
-            if(users.isEmpty()){
+            List<User> users = (List<User>) query.list();
+            if (users.isEmpty()) {
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null , "Invalid username"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Invalid username"));
                 throw new Exception();
             }
             this.user = users.get(0);
-            if(!(user.getPass().equals(password))){
+            if (!(user.getPass().equals(password))) {
                 FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null , "Invalid pass"));
+                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Invalid pass"));
                 throw new Exception();
             }
             String ret = "";
-            switch(user.getUserType().intValue()){
+            switch (user.getUserType().intValue()) {
                 case 0:
                     FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "User not approved by admin"));
+                            addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "User not approved by admin"));
                     throw new Exception();
                 case 1:
                     ret = "user";
@@ -75,7 +75,7 @@ public class Controler implements Serializable {
             }
             this.session.getTransaction().commit();
             return ret;
-        } catch(Exception e){
+        } catch (Exception e) {
             this.session.getTransaction().rollback();
         }
         return null;
@@ -90,10 +90,10 @@ public class Controler implements Serializable {
         this.session.beginTransaction();
         SQLQuery query = this.session.createSQLQuery("SELECT * FROM User WHERE username='" + user.getUsername() + "'");
         query.addEntity(User.class);
-        List<User> users = (List<User>)query.list();
-        if(!users.isEmpty()){
+        List<User> users = (List<User>) query.list();
+        if (!users.isEmpty()) {
             FacesContext.getCurrentInstance().
-                        addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null , "Username taken, choose another one"));
+                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Username taken, choose another one"));
             return null;
         }
         query = this.session.createSQLQuery("SELECT * FROM employment WHERE id = 2");
@@ -109,8 +109,36 @@ public class Controler implements Serializable {
         return "index";
     }
 
+    public List<User> getNewUsers() {
+        this.session.beginTransaction();
+        SQLQuery query = session.createSQLQuery("SELECT * FROM User WHERE user_type = 0");
+        query.addEntity(User.class);
+        List<User> users = (List<User>) query.list();
+        this.session.getTransaction().commit();
+        return users;
+    }
+
     public String showDefaultPage() {
         return "default";
+    }
+
+    public String aprroveUserWithId(Integer id) {
+        if (id == null) {
+            return null;
+        }
+        this.session.beginTransaction();
+        try {
+            SQLQuery query = session.createSQLQuery("SELECT * FROM User WHERE id = " + id.toString());
+            query.addEntity(User.class);
+            List<User> users = (List<User>) query.list();
+            User usr = users.get(0);
+            usr.setUserType(new Integer(1));
+            this.session.save(usr);
+            this.session.getTransaction().commit();
+        } catch(Exception e){
+            this.session.getTransaction().rollback();
+        }
+        return null;
     }
 
     @PostConstruct
@@ -135,14 +163,15 @@ public class Controler implements Serializable {
     }
 
     public List<InterCityLine> getInterCityLines() {
-        if(interCityLines != null)
+        if (interCityLines != null) {
             return interCityLines;
+        }
         //interCityLines = new ArrayList<>();
         Transaction tx = session.beginTransaction();
         SQLQuery query = session.createSQLQuery("SELECT * FROM inter_city_line AS i, bus_companys AS bc, bus AS b "
                 + "WHERE i.bus_company_id = bc.id AND i.bus_id = b.id");
         query.addEntity(InterCityLine.class);
-        interCityLines = (List<InterCityLine>)query.list();
+        interCityLines = (List<InterCityLine>) query.list();
         tx.commit();
         return interCityLines;
     }
