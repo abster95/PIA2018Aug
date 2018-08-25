@@ -8,6 +8,9 @@
             <column name="id" />
             <generator class="identity" />
         </id>
+        <property name="cardStatus" type="java.lang.Integer">
+            <column name="card_status" />
+        </property>
         <many-to-one name="cityLine" class="beans.CityLine" fetch="select">
             <column name="line_id" not-null="true" />
         </many-to-one>

@@ -25,6 +25,7 @@ public class MonthlyCards  implements java.io.Serializable {
      private Integer id;
      private CityLine cityLine;
      private User user;
+     private Integer cardStatus;
 
     public MonthlyCards() {
     }
@@ -32,6 +33,11 @@ public class MonthlyCards  implements java.io.Serializable {
     public MonthlyCards(CityLine cityLine, User user) {
        this.cityLine = cityLine;
        this.user = user;
+    }
+    public MonthlyCards(CityLine cityLine, User user, Integer cardStatus) {
+       this.cityLine = cityLine;
+       this.user = user;
+       this.cardStatus = cardStatus;
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
@@ -64,6 +70,15 @@ public class MonthlyCards  implements java.io.Serializable {
     
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Column(name="card_status")
+    public Integer getCardStatus() {
+        return cardStatus;
+    }
+
+    public void setCardStatus(Integer cardStatus) {
+        this.cardStatus = cardStatus;
     }
 
 

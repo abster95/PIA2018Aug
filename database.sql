@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 18, 2018 at 12:35 PM
+-- Generation Time: Aug 25, 2018 at 07:15 PM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -124,7 +124,8 @@ INSERT INTO `driver` (`id`, `firstname`, `lastname`, `dob`, `started_driving`) V
 (1, 'Misko', 'Miskovic', '1990-01-15', '2018-04-15'),
 (2, 'Majstor', 'Miki', '1980-08-01', '1996-08-08'),
 (3, 'Bucko', 'Buckovic', '1985-07-03', '2017-12-19'),
-(4, 'Saban', 'Sapke', '1970-09-02', '2013-04-05');
+(4, 'Saban', 'Sapke', '1970-09-02', '2013-04-05'),
+(5, 'Voznjo', 'Voznjic', '1990-05-23', '2018-04-09');
 
 -- --------------------------------------------------------
 
@@ -182,8 +183,17 @@ INSERT INTO `inter_city_line` (`id`, `bus_company_id`, `bus_id`, `driver_id`, `d
 CREATE TABLE `monthly_cards` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `line_id` int(11) NOT NULL
+  `line_id` int(11) NOT NULL,
+  `card_status` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `monthly_cards`
+--
+
+INSERT INTO `monthly_cards` (`id`, `user_id`, `line_id`, `card_status`) VALUES
+(1, 5, 3, 1),
+(2, 7, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -226,9 +236,11 @@ INSERT INTO `user` (`id`, `firstname`, `lastname`, `username`, `pass`, `adress`,
 (1, 'Ado', 'Adminson', 'admin', 'admin', 'Zasto je ovo obavezno 32', '1990-08-08', '+3816543210', 1, 'admin@administrator.com', 2),
 (2, 'Obican', 'User', 'obican', 'obican', 'Adresica 123', '1992-08-14', '+38164656768', 1, 'obican@lik.com', 1),
 (3, 'Not', 'Authorized', 'neodobren', 'neodobren', 'Zasto brt', '2018-08-06', '+38165233223', 1, 'neodobren@korisnik.com', 0),
-(4, 'Abi', 'Babi', 'abibabi', 'abibabi', 'Ne dam', '2018-08-13', '+3816523432', 2, 'abi@babi.com', 0),
-(5, 'Ajmo', 'Opet', 'ajmo', 'ajmo', 'Neka', '2018-06-11', '+3816523432', 2, 'ajmo@opet.com', 0),
-(6, 'Succ', 'Essful', 'succ', 'succ', 'Success', '2018-08-14', '+3816523734', 2, 'succ@ess.com', 0);
+(4, 'Abi', 'Babi', 'abibabi', 'abibabi', 'Ne dam', '2018-08-13', '+3816523432', 2, 'abi@babi.com', 1),
+(5, 'Ajmo', 'Opet', 'ajmo', 'ajmo', 'Neka', '2018-06-11', '+3816523432', 2, 'ajmo@opet.com', 1),
+(6, 'Succ', 'Essful', 'succ', 'succ', 'Success', '2018-08-14', '+3816523734', 2, 'succ@ess.com', 1),
+(7, 'New', 'User', 'newuser', 'newuser', 'Adresa 1231', '2018-06-11', '+381652343234', 2, 'new@user.com', 1),
+(8, 'New', 'User', 'newuser2', 'newuser2', 'Asdf sa 12', '2018-06-13', '+38165233322', 2, 'new2@user.com', 0);
 
 --
 -- Indexes for dumped tables
@@ -328,7 +340,7 @@ ALTER TABLE `city_line`
 -- AUTO_INCREMENT for table `driver`
 --
 ALTER TABLE `driver`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `employment`
 --
@@ -343,7 +355,7 @@ ALTER TABLE `inter_city_line`
 -- AUTO_INCREMENT for table `monthly_cards`
 --
 ALTER TABLE `monthly_cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `reservations`
 --
@@ -353,7 +365,7 @@ ALTER TABLE `reservations`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- Constraints for dumped tables
 --

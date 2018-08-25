@@ -11,10 +11,10 @@
             <p:dataTable  var="card" value="#{controler.getMonthlyCards()}">
 
                 <p:column headerText="CityLine">
-                    #{card.cityLine}
+                    #{card.cityLine.id}
                 </p:column>
                 <p:column headerText="Approve">
-                    <p:commandButton value="Approve User" action="#{controler.aprroveMonthlyCardWithId(id)}" update="cardsForm" />
+                    <p:commandButton value="Approve User" action="#{controler.aprroveMonthlyCardWithId(card.id)}" update="cardsForm" />
                 </p:column>
 
             </p:dataTable>
