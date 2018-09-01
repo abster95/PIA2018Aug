@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Manage City Lines</title>
     </h:head>
@@ -10,6 +11,7 @@
         <p:messages>
             <p:autoUpdate />
         </p:messages>
+        <h1>Add new driver</h1>
         <h:form id="addDriver">
             <p:panelGrid columns='2'>
                 Driver First Name:
@@ -24,9 +26,28 @@
                 <p:commandButton value='Submit' action='#{controler.addNewDriver()}' update="addDriver"/>
             </p:panelGrid>
         </h:form>
-        
+        <br />
+        <br />
+        <h1>Add new city line</h1>
         <h:form id="addLine">
-                
+            <p:panelGrid columns ="2">
+                Driver:
+                <p:selectOneMenu id="selectDriver" value="#{controler.selectedDriver}" required="true">
+                    <f:selectItem itemLabel="Select Driver" itemValue="" />
+                    <f:selectItems value="#{controler.availableDrivers}" />
+                </p:selectOneMenu>
+                Bus:
+                <p:selectOneMenu id="selectBus" value="#{controler.selectedBus}" required="true">
+                    <f:selectItem itemLabel="Select Bus" itemValue="" />
+                    <f:selectItems value="#{controler.availableBuses}" />
+                </p:selectOneMenu>
+                Stations: (separate by #)
+                <p:inputText value="#{controler.cityLine.otherStations}" required="true"/>
+                Departure times: (HH:mm separated by #)
+                <p:inputText value="#{controler.cityLine.departureTimes}" required="true"/>
+                Save new line
+                <p:commandButton value="Save" action="#{controler.addCityLine()}" update="addLine"/>
+            </p:panelGrid>
         </h:form>
     </h:body>
 </html>

@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Manage Inter City Line</title>
     </h:head>
@@ -10,25 +11,36 @@
         <h:form>
             <p:messages id="register_messages" showDetail="true" closable="true">
             </p:messages>
-            <p:panelGrid columns='2'>
-                Bus:
-                <p:inputText value='#{controler.interCityLine.bus}' required="true" />
-                Company:
-                <p:inputText value='#{controler.interCityLine.busCompanys}' required="true"/>
-                Driver:
-                <p:inputText value='#{controler.interCityLine.driver}' required="true"/>
-                First station:
-                <p:inputText value="#{controler.interCityLine.firstStation}" required="true" />
-                Departure:
-                <p:inputText value='#{controler.interCityLine.departure}' required="true" />
-                Other stations:
-                <p:inputText value ='#{controler.interCityLine.otherStations}' required="true"/>
-                Last station:
-                <p:inputText value='#{controler.interCityLine.lastStation}' required="true"/>
-                Arrival:
-                <p:inputText value='#{controler.interCityLine.arrival}' required="true"/>
-                <p:commandButton value='Submit' ajax='false' action='#{controler.addInterCityLine()}'/>
-            </p:panelGrid>
+            <p:wizard flowListener="#{controler.wizardListener}">
+                <p:tab id="company"  title="Company">
+                    <p:panelGrid columns="2"> 
+                        Select existing:
+                        <p:selectOneMenu id="selectCompany" value="#{controler.strSelectedCompany}">
+                            <f:selectItem itemLabel="Select Company" itemValue="" />
+                            <f:selectItems value="#{controler.companies}" />
+                        </p:selectOneMenu>
+                        Company name:
+                        <p:inputText value="#{controler.currCompany.name}"/>
+                        Company address:
+                        <p:inputText value="#{controler.currCompany.adrerss}"/>
+                        Company number:
+                        <p:inputText value="#{controler.currCompany.number}"/>
+                    </p:panelGrid>
+                </p:tab>
+                <p:tab id="driver" title="Driver">
+                    Select existing:
+                    <p:selectOneMenu id="selectDriver" value="#{controler.selectedDriver}">
+                            <f:selectItem itemLabel="Select Driver" itemValue="" />
+                            <f:selectItems value="#{controler.availableDrivers}" />
+                        </p:selectOneMenu>
+                </p:tab>
+                <p:tab id="done" title="DONE">
+                    #{controler.currCompany.name}
+                    <br/>
+                    #{controler.driver.firstname}
+                    
+                </p:tab>
+            </p:wizard>
         </h:form>
     </h:body>
 </html>

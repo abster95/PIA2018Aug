@@ -28,6 +28,9 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.NewHibernateUtil;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import org.primefaces.event.FlowEvent;
 
 /**
  *
@@ -46,8 +49,15 @@ public class Controler implements Serializable {
     private List<InterCityLine> interCityLines;
     private List<InterCityLine> filteredInterCityLines;
     private Driver driver;
+    private List<Driver> availableDrivers;
     private CityLine cityLine;
     private Bus cityLineBus;
+    private List<Bus> availableBuses;
+    private String selectedBus;
+    private String selectedDriver;
+    private List<BusCompanys> companies;
+    private String strSelectedCompany;
+    private BusCompanys currCompany;
     public static Session session = null;
 
     public String logIn() {
@@ -93,14 +103,17 @@ public class Controler implements Serializable {
         return "register";
     }
 
-    public String addInterCityLine(){
-        this.session.beginTransaction();          
+    public String showDefaultPage() {
+        return "default";
+    }
+
+    public String addInterCityLine() {
+        this.session.beginTransaction();
         this.session.save(interCityLine);
         this.session.getTransaction().commit();
         return "manageInterCity";
     }
 
-    
     public String checkAndRegister() {
         this.session.beginTransaction();
         SQLQuery query = this.session.createSQLQuery("SELECT * FROM User WHERE username='" + user.getUsername() + "'");
@@ -132,7 +145,7 @@ public class Controler implements Serializable {
         this.session.getTransaction().commit();
         return users;
     }
-    
+
     public List<MonthlyCards> getMonthlyCards() {
         this.session.beginTransaction();
         SQLQuery query = session.createSQLQuery("SELECT * FROM monthly_cards WHERE card_status != 1");
@@ -141,9 +154,7 @@ public class Controler implements Serializable {
         this.session.getTransaction().commit();
         return monthly_cards;
     }
-    
 
-//Add aproved column to database and it will work like approve user    
     public String aprroveMonthlyCardWithId(Integer id) {
         if (id == null) {
             return null;
@@ -158,12 +169,12 @@ public class Controler implements Serializable {
             card.setCardStatus(new Integer(1));
             this.session.save(card);
             this.session.getTransaction().commit();
-        } catch(Exception e){
+        } catch (Exception e) {
             this.session.getTransaction().rollback();
         }
         return null;
     }
-        
+
     public String aprroveUserWithId(Integer id) {
         if (id == null) {
             return null;
@@ -185,10 +196,10 @@ public class Controler implements Serializable {
 
     public String addNewDriver() {
         this.session.beginTransaction();
-        try{
+        try {
             session.save(driver);
             this.session.getTransaction().commit();
-        }catch(Exception e){
+        } catch (Exception e) {
             this.session.getTransaction().rollback();
         }
         driver = new Driver();
@@ -198,7 +209,111 @@ public class Controler implements Serializable {
     public String manageCity() {
         driver = new Driver();
         cityLine = new CityLine();
+        this.session.beginTransaction();
+        try {
+            SQLQuery query = this.session.createSQLQuery("SELECT * FROM  driver");
+            query.addEntity(Driver.class);
+            availableDrivers = (List<Driver>) query.list();
+            availableBuses = new ArrayList<>();
+            SQLQuery busQuery = this.session.createSQLQuery("SELECT * FROM bus WHERE bus.id NOT IN (SELECT bus_id FROM city_line) "
+                    + "AND bus.id NOT IN (SELECT bus_id FROM inter_city_line)");
+            busQuery.addEntity(Bus.class);
+            availableBuses = (List<Bus>) busQuery.list();
+            this.session.getTransaction().commit();
+        } catch (Exception e) {
+            this.session.getTransaction().rollback();
+        }
         return "manageCity";
+    }
+
+    public void addCityLine() {
+        String[] stations = this.cityLine.getOtherStations().split("#");
+        this.cityLine.setFirstStation(stations[0]);
+        this.cityLine.setLastStation(stations.length);
+        Pattern p = Pattern.compile("\\d+");
+        Matcher m = p.matcher(this.selectedBus);
+        m.find();
+        String busID = m.group();
+
+        this.session.beginTransaction();
+        try {
+            SQLQuery busQuery = this.session.createSQLQuery("SELECT * FROM bus WHERE id =" + busID);
+            busQuery.addEntity(Bus.class);
+            List<Bus> buses = (List<Bus>) busQuery.list();
+            this.cityLine.setBus(buses.get(0));
+            this.session.save(this.cityLine);
+            this.session.getTransaction().commit();
+        } catch (Exception e) {
+            this.session.getTransaction().rollback();
+        }
+        this.cityLine = new CityLine();
+        this.selectedBus = null;
+        this.selectedDriver = null;
+    }
+
+    public String manageInterCity() {
+        this.interCityLine = new InterCityLine();
+        this.currCompany = new BusCompanys();
+        this.strSelectedCompany = null;
+        this.selectedDriver = null;
+        this.session.beginTransaction();
+        try {
+            SQLQuery query = this.session.createSQLQuery("SELECT * FROM  driver");
+            query.addEntity(Driver.class);
+            availableDrivers = (List<Driver>) query.list();
+            availableBuses = new ArrayList<>();
+            SQLQuery busQuery = this.session.createSQLQuery("SELECT * FROM bus WHERE bus.id NOT IN (SELECT bus_id FROM city_line) "
+                    + "AND bus.id NOT IN (SELECT bus_id FROM inter_city_line)");
+            busQuery.addEntity(Bus.class);
+            availableBuses = (List<Bus>) busQuery.list();
+            SQLQuery companiesQuery = this.session.createSQLQuery("SELECT * FROM bus_companys");
+            companiesQuery.addEntity(BusCompanys.class);
+            companies = (List<BusCompanys>) companiesQuery.list();
+            this.session.getTransaction().commit();
+        } catch (Exception e) {
+            this.session.getTransaction().rollback();
+        }
+        return "manageInterCity";
+    }
+
+    public void updateCurrCompany(){
+        if ((null != this.strSelectedCompany) && !this.strSelectedCompany.isEmpty()) {
+            Pattern p = Pattern.compile("\\d+");
+            Matcher m = p.matcher(this.strSelectedCompany);
+            m.find();
+            String companyId = m.group();
+            this.session.beginTransaction();
+            try {
+                SQLQuery query = this.session.createSQLQuery("SELECT * FROM bus_companys WHERE id = " + companyId);
+                query.addEntity(BusCompanys.class);
+                List<BusCompanys> companies = (List<BusCompanys>) query.list();
+                this.currCompany = companies.get(0);
+                this.session.getTransaction().commit();
+            } catch(Exception e){
+                this.session.getTransaction().rollback();
+            }
+        }
+    }
+    public void updateCurrDriver(){
+        if ((null != this.selectedDriver) && !this.selectedDriver.isEmpty()) {
+            String[] splitted = selectedDriver.split(" ");
+            this.session.beginTransaction();
+            try {
+                SQLQuery query = this.session.createSQLQuery("SELECT * FROM driver WHERE firstname = '" + splitted[0]
+                                                                +"' AND lastname = '" + splitted[1]+"'");
+                query.addEntity(Driver.class);
+                List<Driver> drivers = (List<Driver>) query.list();
+                this.driver = drivers.get(0);
+                this.session.getTransaction().commit();
+            } catch(Exception e){
+                this.session.getTransaction().rollback();
+            }
+        }
+    }
+    public String wizardListener(FlowEvent event) {
+        updateCurrCompany();
+        updateCurrDriver();
+        return event.getNewStep();
     }
 
     @PostConstruct
@@ -213,7 +328,7 @@ public class Controler implements Serializable {
     public Controler() {
         user = new User();
     }
-    
+
     public User getUser() {
         return user;
     }
@@ -279,7 +394,7 @@ public class Controler implements Serializable {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
-    
+
     public InterCityLine getInterCityLine() {
         return interCityLine;
     }
@@ -304,5 +419,69 @@ public class Controler implements Serializable {
         this.cityLine = cityLine;
     }
 
+    public List<Driver> getAvailableDrivers() {
+        return availableDrivers;
+    }
+
+    public void setAvailableDrivers(List<Driver> availableDrivers) {
+        this.availableDrivers = availableDrivers;
+    }
+
+    public Bus getCityLineBus() {
+        return cityLineBus;
+    }
+
+    public void setCityLineBus(Bus cityLineBus) {
+        this.cityLineBus = cityLineBus;
+    }
+
+    public List<Bus> getAvailableBuses() {
+        return availableBuses;
+    }
+
+    public void setAvailableBuses(List<Bus> availableBuses) {
+        this.availableBuses = availableBuses;
+    }
+
+    public String getSelectedBus() {
+        return selectedBus;
+    }
+
+    public void setSelectedBus(String selectedBus) {
+        this.selectedBus = selectedBus;
+    }
+
+    public String getSelectedDriver() {
+        return selectedDriver;
+    }
+
+    public void setSelectedDriver(String selectedDriver) {
+        this.selectedDriver = selectedDriver;
+    }
+
+    public List<BusCompanys> getCompanies() {
+        return companies;
+    }
+
+    public void setCompanies(List<BusCompanys> companies) {
+        this.companies = companies;
+    }
+
+    public String getStrSelectedCompany() {
+        return strSelectedCompany;
+    }
+
+    public void setStrSelectedCompany(String strSelectedCompany) {
+        this.strSelectedCompany = strSelectedCompany;
+    }
+
+    public BusCompanys getCurrCompany() {
+        return currCompany;
+    }
+
+    public void setCurrCompany(BusCompanys currCompany) {
+        this.currCompany = currCompany;
+    }
+    
     
 }
