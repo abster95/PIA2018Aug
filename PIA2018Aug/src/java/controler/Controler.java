@@ -8,6 +8,7 @@ package controler;
 import beans.Bus;
 import beans.MonthlyCards;
 import beans.BusCompanys;
+import beans.BusPictures;
 import beans.CityLine;
 import beans.Driver;
 import beans.Employment;
@@ -30,7 +31,9 @@ import org.hibernate.Transaction;
 import util.NewHibernateUtil;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -58,6 +61,7 @@ public class Controler implements Serializable {
     private List<BusCompanys> companies;
     private String strSelectedCompany;
     private BusCompanys currCompany;
+    private UploadedFile busImage;
     public static Session session = null;
 
     public String logIn() {
@@ -251,11 +255,18 @@ public class Controler implements Serializable {
         this.selectedDriver = null;
     }
 
+    public void handleFileUpload(FileUploadEvent event) {
+        busImage = event.getFile();
+    }
+
     public String manageInterCity() {
         this.interCityLine = new InterCityLine();
         this.currCompany = new BusCompanys();
+        this.cityLineBus = new Bus();
+        this.driver = new Driver();
         this.strSelectedCompany = null;
         this.selectedDriver = null;
+        this.busImage = null;
         this.session.beginTransaction();
         try {
             SQLQuery query = this.session.createSQLQuery("SELECT * FROM  driver");
@@ -276,7 +287,7 @@ public class Controler implements Serializable {
         return "manageInterCity";
     }
 
-    public void updateCurrCompany(){
+    public void updateCurrCompany() {
         if ((null != this.strSelectedCompany) && !this.strSelectedCompany.isEmpty()) {
             Pattern p = Pattern.compile("\\d+");
             Matcher m = p.matcher(this.strSelectedCompany);
@@ -289,31 +300,90 @@ public class Controler implements Serializable {
                 List<BusCompanys> companies = (List<BusCompanys>) query.list();
                 this.currCompany = companies.get(0);
                 this.session.getTransaction().commit();
-            } catch(Exception e){
+            } catch (Exception e) {
                 this.session.getTransaction().rollback();
             }
         }
     }
-    public void updateCurrDriver(){
+
+    public void updateCurrDriver() {
         if ((null != this.selectedDriver) && !this.selectedDriver.isEmpty()) {
             String[] splitted = selectedDriver.split(" ");
             this.session.beginTransaction();
             try {
                 SQLQuery query = this.session.createSQLQuery("SELECT * FROM driver WHERE firstname = '" + splitted[0]
-                                                                +"' AND lastname = '" + splitted[1]+"'");
+                        + "' AND lastname = '" + splitted[1] + "'");
                 query.addEntity(Driver.class);
                 List<Driver> drivers = (List<Driver>) query.list();
                 this.driver = drivers.get(0);
                 this.session.getTransaction().commit();
-            } catch(Exception e){
+            } catch (Exception e) {
                 this.session.getTransaction().rollback();
             }
         }
     }
+
+    public void updateCurrBus() {
+        if ((null != this.selectedBus) && !this.selectedBus.isEmpty()) {
+            Pattern p = Pattern.compile("\\d+");
+            Matcher m = p.matcher(this.strSelectedCompany);
+            m.find();
+            String busId = m.group();
+            this.session.beginTransaction();
+            try {
+                SQLQuery query = this.session.createSQLQuery("SELECT * FROM bus WHERE id = " + busId);
+                query.addEntity(Bus.class);
+                List<Bus> buses = (List<Bus>) query.list();
+                this.cityLineBus = buses.get(0);
+                this.session.getTransaction().commit();
+            } catch (Exception e) {
+                this.session.getTransaction().rollback();
+            }
+        }
+    }
+
     public String wizardListener(FlowEvent event) {
         updateCurrCompany();
         updateCurrDriver();
+        updateCurrBus();
         return event.getNewStep();
+    }
+
+    public String saveInterCityLine() {
+        this.interCityLine.setBus(cityLineBus);
+        this.interCityLine.setDriver(driver);
+        this.interCityLine.setBusCompanys(currCompany);
+        String[] stations = this.interCityLine.getOtherStations().split(" ");
+        this.interCityLine.setFirstStation(stations[0]);
+        this.interCityLine.setLastStation(stations[stations.length-1]);
+        this.session.beginTransaction();
+        try {
+
+            if ((null == this.selectedBus) || this.selectedBus.isEmpty()) {
+                this.session.save(this.cityLineBus);
+            }
+            if ((null == this.selectedDriver) || this.selectedDriver.isEmpty()) {
+                this.session.save(this.driver);
+            }
+            if ((null == this.strSelectedCompany) || this.strSelectedCompany.isEmpty()) {
+                this.currCompany.setLogo("default");
+                this.session.save(this.currCompany);
+            }
+            if (null != busImage) {
+                BusPictures picture = new BusPictures();
+                picture.setBus(cityLineBus);
+                String path = "bus" + cityLineBus.getId() + busImage.getFileName();
+                picture.setName(path);
+                busImage.write(path);
+                this.session.save(picture);
+            }
+            this.session.save(this.interCityLine);
+            this.session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.session.getTransaction().rollback();
+        }
+        return "admin";
     }
 
     @PostConstruct
@@ -482,6 +552,13 @@ public class Controler implements Serializable {
     public void setCurrCompany(BusCompanys currCompany) {
         this.currCompany = currCompany;
     }
-    
-    
+
+    public UploadedFile getBusImage() {
+        return busImage;
+    }
+
+    public void setBusImage(UploadedFile busImage) {
+        this.busImage = busImage;
+    }
+
 }

@@ -152,6 +152,8 @@ public class InterCityLine  implements java.io.Serializable {
     
     @Column(name="other_stations", length=65535)
     public String getOtherStations() {
+        if(null == this.otherStations)
+            return null;
         String tmp = this.otherStations.replace('#', ' ');
         return tmp;
     }

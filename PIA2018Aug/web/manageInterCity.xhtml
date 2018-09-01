@@ -8,7 +8,8 @@
         <title>Manage Inter City Line</title>
     </h:head>
     <h:body>
-        <h:form>
+        <h1>New line will be created only on the last step</h1>
+        <h:form id="manageInterCity" enctype="multipart/form-data">
             <p:messages id="register_messages" showDetail="true" closable="true">
             </p:messages>
             <p:wizard flowListener="#{controler.wizardListener}">
@@ -28,17 +29,68 @@
                     </p:panelGrid>
                 </p:tab>
                 <p:tab id="driver" title="Driver">
+                    <p:panelGrid columns="2"> 
                     Select existing:
                     <p:selectOneMenu id="selectDriver" value="#{controler.selectedDriver}">
-                            <f:selectItem itemLabel="Select Driver" itemValue="" />
-                            <f:selectItems value="#{controler.availableDrivers}" />
-                        </p:selectOneMenu>
+                        <f:selectItem itemLabel="Select Driver" itemValue="" />
+                        <f:selectItems value="#{controler.availableDrivers}" />
+                    </p:selectOneMenu>
+                    Driver First Name:
+                    <p:inputText value='#{controler.driver.firstname}' />
+                    Driver Last Name:
+                    <p:inputText value='#{controler.driver.lastname}'/>
+                    Date of Birth:
+                    <p:calendar value ='#{controler.driver.dob}'  showOn='button'/>
+                    Started Driving:
+                    <p:calendar value ='#{controler.driver.startedDriving}'  showOn='button'/>
+                    </p:panelGrid>
                 </p:tab>
-                <p:tab id="done" title="DONE">
-                    #{controler.currCompany.name}
-                    <br/>
-                    #{controler.driver.firstname}
-                    
+                <p:tab id="buses" title="Buses">
+                    <p:panelGrid columns="2"> 
+                    Select existing:
+                    <p:selectOneMenu id="selectBus" value="#{controler.selectedBus}">
+                        <f:selectItem itemLabel="Select Bus" itemValue="" />
+                        <f:selectItems value="#{controler.availableBuses}" />
+                    </p:selectOneMenu>
+                    Model:
+                    <p:inputText value="#{controler.cityLineBus.model}"/>
+                    Creator:
+                    <p:inputText value="#{controler.cityLineBus.creator}"/>
+                    Capacity:
+                    <p:inputNumber value="#{controler.cityLineBus.capacity}"/>
+                    Img:
+                    <p:fileUpload value="#{controler.busImage}" fileUploadListener="#{controler.handleFileUpload}" mode="advanced"
+                                  fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                    </p:panelGrid>
+                </p:tab>
+                <p:tab id="line" title="Line">
+                    <p:panelGrid columns="2">
+                        Departure:
+                        <p:calendar id="departureTime" value="#{controler.interCityLine.departure}" pattern="dd/MM/yyyy HH:mm" />
+                        Arrival:
+                        <p:calendar id="arrivalTime" value="#{controler.interCityLine.arrival}" pattern="dd/MM/yyyy HH:mm" />
+                        Stations: (separate with #)
+                        <p:inputText value="#{controler.interCityLine.otherStations}"/>
+                    </p:panelGrid>
+                </p:tab>
+                <p:tab id="confirm" title="Confirmation">
+                    <p:panel header="Confirmation">
+                        <p:panelGrid columns="2">
+                            Company Name:
+                            #{controler.currCompany.name}
+                            Driver Name:
+                            #{controler.driver.firstname}
+                            Bus id:
+                            #{controler.cityLineBus.id}
+                            Departure:
+                            #{controler.interCityLine.departure}
+                            Arrival:
+                            #{controler.interCityLine.arrival}
+                            Stations:
+                            #{controler.interCityLine.otherStations}
+                        </p:panelGrid>
+                        <p:commandButton value="Submit" action="#{controler.saveInterCityLine()}" process="@this" />
+                    </p:panel>
                 </p:tab>
             </p:wizard>
         </h:form>
