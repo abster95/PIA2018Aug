@@ -9,7 +9,9 @@
     <h:body>
         <h:form id="cardsForm">
             <p:dataTable  var="card" value="#{controler.getMonthlyCards()}">
-
+                <p:column headerText="User">
+                    #{card.user.username}
+                </p:column>
                 <p:column headerText="CityLine">
                     #{card.cityLine.id}
                 </p:column>
@@ -18,6 +20,9 @@
                 </p:column>
 
             </p:dataTable>
+        </h:form>
+        <h:form>
+            <p:commandButton value="Back" action="admin" />
         </h:form>
     </h:body>
 </html>

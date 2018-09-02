@@ -88,7 +88,9 @@ public class CityLine  implements java.io.Serializable {
     
     @Column(name="other_stations", nullable=false, length=65535)
     public String getOtherStations() {
-        return this.otherStations;
+        if(null == otherStations)
+            return null;
+        return this.otherStations.replace('#', ' ');
     }
     
     public void setOtherStations(String otherStations) {
@@ -124,7 +126,11 @@ public class CityLine  implements java.io.Serializable {
         this.monthlyCardses = monthlyCardses;
     }
 
-
+    public String getFormattedTimes(){
+        if(null == departureTimes)
+            return null;
+        return departureTimes.replace('#', ' ');
+    }
 
 
 }

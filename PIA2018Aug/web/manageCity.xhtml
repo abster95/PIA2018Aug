@@ -22,7 +22,7 @@
                 <p:calendar value ='#{controler.driver.dob}'  showOn='button' required="true"/>
                 Started Driving:
                 <p:calendar value ='#{controler.driver.startedDriving}'  showOn='button' required="true"/>
-                
+
                 <p:commandButton value='Submit' action='#{controler.addNewDriver()}' update="addDriver"/>
             </p:panelGrid>
         </h:form>
@@ -48,6 +48,9 @@
                 Save new line
                 <p:commandButton value="Save" action="#{controler.addCityLine()}" update="addLine"/>
             </p:panelGrid>
+        </h:form>
+        <h:form>
+            <p:commandButton value="Back" action="admin" />
         </h:form>
     </h:body>
 </html>

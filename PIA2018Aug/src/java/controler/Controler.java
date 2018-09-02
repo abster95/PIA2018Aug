@@ -13,6 +13,7 @@ import beans.CityLine;
 import beans.Driver;
 import beans.Employment;
 import beans.InterCityLine;
+import beans.Reservations;
 import beans.User;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
@@ -61,6 +62,10 @@ public class Controler implements Serializable {
     private List<BusCompanys> companies;
     private String strSelectedCompany;
     private BusCompanys currCompany;
+    private List<CityLine> allCityLines;
+    private List<CityLine> filteredCityLines;
+    private List<Reservations> myReservations;
+    private List<Reservations> filteredReservations;
     private UploadedFile busImage;
     public static Session session = null;
 
@@ -102,6 +107,11 @@ public class Controler implements Serializable {
         return null;
     }
 
+    public String logOut() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "index";
+    }
+
     public String register() {
         user = new User();
         return "register";
@@ -111,6 +121,7 @@ public class Controler implements Serializable {
         return "default";
     }
 
+    @Deprecated
     public String addInterCityLine() {
         this.session.beginTransaction();
         this.session.save(interCityLine);
@@ -141,6 +152,7 @@ public class Controler implements Serializable {
         return "index";
     }
 
+    // Adminland
     public List<User> getNewUsers() {
         this.session.beginTransaction();
         SQLQuery query = session.createSQLQuery("SELECT * FROM User WHERE user_type = 0");
@@ -157,6 +169,43 @@ public class Controler implements Serializable {
         List<MonthlyCards> monthly_cards = (List<MonthlyCards>) query.list();
         this.session.getTransaction().commit();
         return monthly_cards;
+    }
+    public List<Reservations> getPendingReservations(){
+        List<Reservations> reservations = null;
+        this.session.beginTransaction();
+        try{
+            SQLQuery query = this.session.createSQLQuery("SELECT * FROM reservations WHERE status != 1");
+            query.addEntity(Reservations.class);
+            reservations = (List<Reservations>)query.list();
+            this.session.getTransaction().commit();
+        } catch(Exception e){
+            this.session.getTransaction().rollback();
+            e.printStackTrace();
+        }
+        return reservations;
+    }
+    public void approveReservation(Integer id){
+        if(null == id)
+            return;
+        List<Reservations> pending = getPendingReservations();
+        Reservations res = null;
+        for(Reservations r : pending){
+            if(r.getId().intValue() == id.intValue()){
+                res = r;
+                break;
+            }
+        }
+        if(null == res)
+            return;
+        res.setStatus(new Integer(1));
+        this.session.beginTransaction();
+        try{
+            this.session.save(res);
+            this.session.getTransaction().commit();
+        } catch (Exception e){
+            this.session.getTransaction().rollback();
+            e.printStackTrace();
+        }
     }
 
     public String aprroveMonthlyCardWithId(Integer id) {
@@ -355,7 +404,7 @@ public class Controler implements Serializable {
         this.interCityLine.setBusCompanys(currCompany);
         String[] stations = this.interCityLine.getOtherStations().split(" ");
         this.interCityLine.setFirstStation(stations[0]);
-        this.interCityLine.setLastStation(stations[stations.length-1]);
+        this.interCityLine.setLastStation(stations[stations.length - 1]);
         this.session.beginTransaction();
         try {
 
@@ -384,6 +433,133 @@ public class Controler implements Serializable {
             this.session.getTransaction().rollback();
         }
         return "admin";
+    }
+
+    // Userland
+    public void requestMonthly() {
+        MonthlyCards cardRequest = new MonthlyCards();
+        cardRequest.setUser(user);
+        cardRequest.setCardStatus(0);
+        this.session.beginTransaction();
+        try {
+            SQLQuery check = this.session.createSQLQuery("SELECT * FROM monthly_cards WHERE user_id = " + user.getId());
+            check.addEntity(MonthlyCards.class);
+            List<MonthlyCards> cards = (List<MonthlyCards>) check.list();
+            if (!cards.isEmpty()) {
+                FacesContext.getCurrentInstance().addMessage("showUserMessages", new FacesMessage(FacesMessage.SEVERITY_INFO, "There's already request pending admin approval", null));
+                this.session.getTransaction().commit();
+                return;
+            }
+            // HACK: Database requires this even though we don't really need it
+            SQLQuery query = this.session.createSQLQuery("SELECT * FROM city_line");
+            query.addEntity(CityLine.class);
+            List<CityLine> lines = (List<CityLine>) query.list();
+            cardRequest.setCityLine(lines.get(0));
+            this.session.save(cardRequest);
+            this.session.getTransaction().commit();
+            FacesContext.getCurrentInstance().addMessage("showUserMessages", new FacesMessage(FacesMessage.SEVERITY_INFO, "Request succesfuly submitted", null));
+        } catch (Exception e) {
+            this.session.getTransaction().rollback();
+            FacesContext.getCurrentInstance().addMessage("showUserMessages", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Submitting request failed", null));
+        }
+    }
+
+    public String searchCity() {
+        this.session.beginTransaction();
+        try {
+            SQLQuery query = this.session.createSQLQuery("SELECT * FROM city_line");
+            query.addEntity(CityLine.class);
+            allCityLines = (List<CityLine>) query.list();
+            this.session.getTransaction().commit();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage("showUserMessages", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Couldn't load the city lines :(", null));
+            this.session.getTransaction().rollback();
+            e.printStackTrace();
+        }
+        return "searchCity";
+    }
+
+    public String searchInterCity() {
+        return "searchInterCity";
+    }
+
+    public String lineDetails(Integer id) {
+        if (null == id) {
+            return null;
+        }
+        this.session.beginTransaction();
+        try {
+            SQLQuery query = this.session.createSQLQuery("SELECT * FROM inter_city_line WHERE id = " + id);
+            query.addEntity(InterCityLine.class);
+            List<InterCityLine> lines = (List<InterCityLine>) query.list();
+            this.interCityLine = lines.get(0);
+            this.session.getTransaction().commit();
+        } catch (Exception e) {
+            this.session.getTransaction().rollback();
+            return null;
+        }
+        return "details";
+    }
+
+    public void makeReservation() {
+        Reservations reservation = new Reservations();
+        reservation.setInterCityLine(interCityLine);
+        reservation.setUser(user);
+        reservation.setNumberOfCards(1);
+        reservation.setStatus(0);
+        this.session.beginTransaction();
+        try {
+            this.session.save(reservation);
+            this.session.getTransaction().commit();
+            FacesContext.getCurrentInstance().addMessage("makeUserReservation", new FacesMessage(FacesMessage.SEVERITY_INFO, "Request succesfuly submitted", null));
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.session.getTransaction().rollback();
+            FacesContext.getCurrentInstance().addMessage("makeUserReservation", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Couldn't submit reservation request", null));
+        }
+    }
+
+    public void cancelReservation(Integer id) {
+        if (null == id) {
+            return;
+        }
+        Reservations  res = null;
+        for (Reservations r : this.myReservations) {
+            if (r.getId().intValue() == id.intValue()) {
+                res = r;
+                break;
+            }
+        }
+        if (null == res) {
+            return;
+        }
+        this.session.beginTransaction();
+        try {
+            this.session.delete(res);
+            SQLQuery query = this.session.createSQLQuery("SELECT * FROM reservations WHERE user_id = " + user.getId());
+            query.addEntity(Reservations.class);
+            this.myReservations = (List<Reservations>)query.list();
+            this.filteredReservations = null;
+            this.session.getTransaction().commit();
+        } catch (Exception e) {
+            this.session.getTransaction().rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public String myReservations() {
+        this.session.beginTransaction();
+        try {
+            SQLQuery query = this.session.createSQLQuery("SELECT * FROM reservations WHERE user_id = " + user.getId());
+            query.addEntity(Reservations.class);
+            myReservations = (List<Reservations>)query.list();
+            this.session.getTransaction().commit();
+        } catch(Exception e){
+            this.session.getTransaction().rollback();
+            e.printStackTrace();
+            return null;
+        }
+        return "myReservations";
     }
 
     @PostConstruct
@@ -559,6 +735,38 @@ public class Controler implements Serializable {
 
     public void setBusImage(UploadedFile busImage) {
         this.busImage = busImage;
+    }
+
+    public List<CityLine> getAllCityLines() {
+        return allCityLines;
+    }
+
+    public void setAllCityLines(List<CityLine> allCityLines) {
+        this.allCityLines = allCityLines;
+    }
+
+    public List<CityLine> getFilteredCityLines() {
+        return filteredCityLines;
+    }
+
+    public void setFilteredCityLines(List<CityLine> filteredCityLines) {
+        this.filteredCityLines = filteredCityLines;
+    }
+
+    public List<Reservations> getMyReservations() {
+        return myReservations;
+    }
+
+    public void setMyReservations(List<Reservations> myReservations) {
+        this.myReservations = myReservations;
+    }
+
+    public List<Reservations> getFilteredReservations() {
+        return filteredReservations;
+    }
+
+    public void setFilteredReservations(List<Reservations> filteredReservations) {
+        this.filteredReservations = filteredReservations;
     }
 
 }
