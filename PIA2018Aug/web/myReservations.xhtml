@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>My Reservations</title>
+    </h:head>
+    <h:body>
+        <h:form id="search">
+            <p:dataTable var="res" value="#{controler.myReservations}" widgetVar="reservationsTable" id="reservationsTable"
+                         filteredValue="#{controler.filteredReservations}">
+                <f:facet name='header'>
+                    Search city lines
+                </f:facet>
+                <p:column filterBy='#{res.interCityLine.busCompanys.name}' headerText="Company" footerText="contains" filterMatchMode="contains">
+                    #{res.interCityLine.busCompanys.name}
+                </p:column>
+                <p:column filterBy='#{res.interCityLine.otherStations}' headerText="Stations" footerText="contains" filterMatchMode="contains">
+                    #{res.interCityLine.otherStations}
+                </p:column>
+                <p:column filterBy='#{res.interCityLine.getHoursMinutes(res.interCityLine.departure)}' headerText="Departure" footerText="contains" filterMatchMode="contains">
+                    #{res.interCityLine.getHoursMinutes(res.interCityLine.departure)}
+                </p:column>
+                <p:column filterBy='#{res.interCityLine.getHoursMinutes(res.interCityLine.arrival)}' headerText="Arrival" footerText="contains" filterMatchMode="contains">
+                    #{res.interCityLine.getHoursMinutes(res.interCityLine.arrival)}
+                </p:column>
+                <p:column>
+                    #{(res.status.intValue() == 1) ? "Approved by admin" : "Pending approval"}
+                </p:column>
+                <p:column>
+                    <p:commandButton value="Cancel" action="#{controler.cancelReservation(res.id)}" ajax="true" update="search:reservationsTable"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <h:form>
+            <p:commandButton value="Back" action="user"/>
+        </h:form>
+    </h:body>
+</html>
+

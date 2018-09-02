@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Line Details</title>
+    </h:head>
+    <h:body>
+        <p:panelGrid columns="2">
+            Stations:
+            #{controler.interCityLine.otherStations}
+            <br/>
+            Depart:
+            #{controler.interCityLine.departure}
+            <br/>
+            Arrive:
+            #{controler.interCityLine.arrival}
+            <br/>
+            Bus Company:
+            #{controler.interCityLine.busCompanys.name}
+            <br/>
+            Bus Model:
+            #{controler.interCityLine.bus.model}
+            <br/>
+            Driver First Name:
+            #{controler.interCityLine.driver.firstname}
+            <br/>
+            Driver Last Name:
+            #{controler.interCityLine.driver.lastname}
+            <br/>
+            <p:galleria value="#{controler.images}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
+                <p:graphicImage name="#{image}" alt="Lep busic" title="#{image}"/>
+            </p:galleria>
+
+        </p:panelGrid>
+        <h:form>
+            <p:messages id="makeReservation" showDetail="true" closable="true" for="makeUserReservation">
+                <p:autoUpdate />
+            </p:messages>
+            <p:commandButton value="Make reservation" action="#{controler.makeReservation()}"/>
+        </h:form>
+        <h:form id="back">
+            <p:commandButton value="Back" action="searchInterCity"/>
+        </h:form>
+    </h:body>
+</html>
+

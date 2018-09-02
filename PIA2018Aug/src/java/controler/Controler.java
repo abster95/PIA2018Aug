@@ -67,6 +67,7 @@ public class Controler implements Serializable {
     private List<Reservations> myReservations;
     private List<Reservations> filteredReservations;
     private UploadedFile busImage;
+    private List<String> images;
     public static Session session = null;
 
     public String logIn() {
@@ -566,6 +567,8 @@ public class Controler implements Serializable {
     public void init() {
         session = NewHibernateUtil.getSessionFactory().openSession();
         user = new User();
+        this.images = new ArrayList<>();
+        images.add("bus.png");
     }
 
     /**
@@ -769,4 +772,12 @@ public class Controler implements Serializable {
         this.filteredReservations = filteredReservations;
     }
 
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+    
 }

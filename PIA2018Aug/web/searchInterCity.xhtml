@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Search Inter City Lines</title>
+    </h:head>
+    <h:body>
+        <h:form id="search">
+            <p:dataTable var="line" value="#{controler.interCityLines}" widgetVar="linesTable"
+                         emptyMessage="No lines found with given criteria"
+                         filteredValue="#{controler.filteredInterCityLines}"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15">
+                <f:facet name='header'>
+                    Search inter city lines
+                </f:facet>
+                <p:column filterBy='#{line.busCompanys.name}' headerText="Company" footerText="contains" filterMatchMode="contains">
+                    #{line.busCompanys.name}
+                </p:column>
+                <p:column filterBy='#{line.getHoursMinutes(line.departure)}' headerText="Start time" footerText="Exact or later" filterMatchMode="gte">
+                    #{line.getHoursMinutes(line.departure)}
+                </p:column>
+                <p:column filterBy="#{line.getHoursMinutes(line.arrival)}" headerText="End time" footerText="Exact or later" filterMatchMode="gte">
+                    #{line.getHoursMinutes(line.arrival)}
+                </p:column>
+                <p:column filterBy='#{line.otherStations}' headerText="Stations" footerText="contains" filterMatchMode="contains">
+                    #{line.otherStations}
+                </p:column>
+                <p:column headerText="Details">
+                    <p:commandButton value="Details" action="#{controler.lineDetails(line.id)}" />
+                </p:column>
+                    
+            </p:dataTable>
+        </h:form>
+        <h:form id="back">
+            <p:commandButton value="Back" action="user"/>
+        </h:form>
+    </h:body>
+</html>
+
