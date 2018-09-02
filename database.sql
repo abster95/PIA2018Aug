@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 25, 2018 at 07:15 PM
+-- Generation Time: Sep 02, 2018 at 01:03 PM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -41,7 +41,11 @@ INSERT INTO `bus` (`id`, `model`, `creator`, `capacity`) VALUES
 (1, '2018S', 'Mercedes', 50),
 (2, '2010Gradski', 'Ikarbus', 120),
 (3, '2014GradskiDugi', 'Solaris', 130),
-(4, '2005Medjugradski', 'Altina', 50);
+(4, '2005Medjugradski', 'Altina', 50),
+(5, 'Gradski2015', 'Solaris', 120),
+(6, 'Dobar e', 'BMW', 329),
+(7, 'Novi', 'Brzi', 500),
+(10, 'Modelsica', 'IMT', 123);
 
 -- --------------------------------------------------------
 
@@ -65,7 +69,8 @@ INSERT INTO `bus_companys` (`id`, `name`, `number`, `adrerss`, `logo`) VALUES
 (1, 'Busko', '+38162123456', 'Autobuska bb', 'BuSkO'),
 (2, 'Bule bus', '+38160111222', 'Levo desno desno levo', '________\r\n| |  | |\r\n-_----_-'),
 (3, 'U Gasu Sam', '+38169696969', 'Fox 69', '-_(o.o)_-'),
-(4, 'Majstore Zadnja', '+38165333222', 'Zadnja Vrata 77', '[]<---[]-----[]-()');
+(4, 'Majstore Zadnja', '+38165333222', 'Zadnja Vrata 77', '[]<---[]-----[]-()'),
+(6, 'Kompanijica', '+31231213', 'Kompanijska', 'default');
 
 -- --------------------------------------------------------
 
@@ -78,6 +83,13 @@ CREATE TABLE `bus_pictures` (
   `bus_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bus_pictures`
+--
+
+INSERT INTO `bus_pictures` (`id`, `bus_id`, `name`) VALUES
+(0, 10, 'bus10bus.png');
 
 -- --------------------------------------------------------
 
@@ -99,8 +111,10 @@ CREATE TABLE `city_line` (
 --
 
 INSERT INTO `city_line` (`id`, `bus_id`, `first_station`, `other_stations`, `last_station`, `departure_times`) VALUES
-(3, 2, 'Pohorska', 'Pohorska#GO Novi Beograd#Blok 30#Brankov#Zelenjak#Vasingtona#Karaburma 2', 16, '08:00#08:30#09:00#09:30#10:00#10:30#11:00#11:30#12:00#12:30'),
-(4, 3, 'Zvezdara 2', 'Zvezdara 2#Dalmatinska#Masinski#Palilulska#Zelenjak#Branko#Usce', 65, '13:00#13:30#14:00#14:30#15:00#15:30#16:00');
+(3, 2, 'Pohorska', 'Pohorska GO Novi Beograd Blok 30 Brankov Zelenjak Vasingtona Karaburma 2', 16, '08:00#08:30#09:00#09:30#10:00#10:30#11:00#11:30#12:00#12:30'),
+(4, 3, 'Zvezdara 2', 'Zvezdara 2 Dalmatinska Masinski Palilulska Zelenjak Branko Usce', 65, '13:00#13:30#14:00#14:30#15:00#15:30#16:00'),
+(5, 5, 'Vuk', 'Vuk Dalmatinska Novo Groblje Vatrogasna Bogoslovija', 5, '11:00#12:00#13:00#14:00#15:00#16:00'),
+(6, 6, 'Prva', 'Prva Druga Treca Ceta', 4, '13:00#14:00#15:00#16:00');
 
 -- --------------------------------------------------------
 
@@ -125,7 +139,8 @@ INSERT INTO `driver` (`id`, `firstname`, `lastname`, `dob`, `started_driving`) V
 (2, 'Majstor', 'Miki', '1980-08-01', '1996-08-08'),
 (3, 'Bucko', 'Buckovic', '1985-07-03', '2017-12-19'),
 (4, 'Saban', 'Sapke', '1970-09-02', '2013-04-05'),
-(5, 'Voznjo', 'Voznjic', '1990-05-23', '2018-04-09');
+(5, 'Voznjo', 'Voznjic', '1990-05-23', '2018-04-09'),
+(8, 'Lepi', 'Lukic', '1990-06-25', '2018-06-11');
 
 -- --------------------------------------------------------
 
@@ -172,7 +187,8 @@ CREATE TABLE `inter_city_line` (
 
 INSERT INTO `inter_city_line` (`id`, `bus_company_id`, `bus_id`, `driver_id`, `departure`, `first_station`, `arrival`, `last_station`, `other_stations`, `is_active`) VALUES
 (1, 1, 1, 3, '2018-08-15 08:30:00', 'Beograd', '2018-08-15 15:00:00', 'Novi Pazar', 'Beograd Kragujevac Kraljevo Novi Pazar', 1),
-(3, 2, 4, 2, '2018-08-15 12:00:00', 'Nis', '2018-08-15 17:00:00', 'Subotica', 'Nis Beograd Novi Sad Subotica', 1);
+(3, 2, 4, 2, '2018-08-15 12:00:00', 'Nis', '2018-08-15 17:00:00', 'Subotica', 'Nis Beograd Novi Sad Subotica', 1),
+(4, 6, 10, 8, '2018-09-05 00:00:00', 'Ljig', '2018-09-05 10:00:00', 'Cacak', 'Ljig Preljina Cacak', 0);
 
 -- --------------------------------------------------------
 
@@ -193,7 +209,9 @@ CREATE TABLE `monthly_cards` (
 
 INSERT INTO `monthly_cards` (`id`, `user_id`, `line_id`, `card_status`) VALUES
 (1, 5, 3, 1),
-(2, 7, 3, 1);
+(2, 7, 3, 1),
+(3, 2, 3, 0),
+(4, 4, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -205,8 +223,16 @@ CREATE TABLE `reservations` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `number_of_cards` int(11) NOT NULL,
-  `line_id` int(11) NOT NULL
+  `line_id` int(11) NOT NULL,
+  `status` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `reservations`
+--
+
+INSERT INTO `reservations` (`id`, `user_id`, `number_of_cards`, `line_id`, `status`) VALUES
+(5, 4, 1, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -325,22 +351,22 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `bus`
 --
 ALTER TABLE `bus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `bus_companys`
 --
 ALTER TABLE `bus_companys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `city_line`
 --
 ALTER TABLE `city_line`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `driver`
 --
 ALTER TABLE `driver`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `employment`
 --
@@ -350,17 +376,17 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `inter_city_line`
 --
 ALTER TABLE `inter_city_line`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `monthly_cards`
 --
 ALTER TABLE `monthly_cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `user`
 --
