@@ -396,6 +396,12 @@ public class Controler implements Serializable {
         updateCurrCompany();
         updateCurrDriver();
         updateCurrBus();
+        if(null != this.interCityLine.getArrival() && null != this.interCityLine.getDeparture()){
+            if(this.interCityLine.getArrival().before(this.interCityLine.getDeparture())){
+                FacesContext.getCurrentInstance().addMessage("showAdminInterCityMessages", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Arrival can't be before departure", null));
+                return event.getOldStep();
+            }
+        }
         return event.getNewStep();
     }
 

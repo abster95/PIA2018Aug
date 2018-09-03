@@ -18,7 +18,7 @@
                 Username:
                 <p:inputText value='#{controler.user.username}' required="true"/>
                 Password:
-                <p:password value="#{controler.user.pass}" required="true" />
+                <p:password value="#{controler.user.pass}" required="true" validator="#{passwordValidator.validate}" />
                 Address:
                 <p:inputText value='#{controler.user.adress}' required="true" />
                 Date of birth:

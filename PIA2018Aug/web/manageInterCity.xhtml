@@ -9,8 +9,8 @@
     </h:head>
     <h:body>
         <h1>New line will be created only on the last step</h1>
-        <h:form id="manageInterCity" enctype="multipart/form-data">
-            <p:messages id="register_messages" showDetail="true" closable="true">
+        <h:form enctype="multipart/form-data">
+            <p:messages id="adminInterCityMessages" showDetail="true" autoUpdate="true" closable="true" for="showAdminInterCityMessages">
             </p:messages>
             <p:wizard flowListener="#{controler.wizardListener}">
                 <p:tab id="company"  title="Company">
